@@ -1,57 +1,67 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".GuestbookActivity" >
 
-    <EditText
-        android:id="@+id/etMessage"
+    <ImageView
+        android:id="@+id/send_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:enabled="true"
+        android:src="@drawable/ic_send" />
+
+    <EditText
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/btSend"
-        android:ems="10"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@id/send_btn"
         android:inputType="text"
         android:maxLines="@integer/single_line" >
-
         <requestFocus />
     </EditText>
 
-    <Button
-        android:id="@+id/btSend"
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/send_btn"
+        android:background="@android:color/darker_gray" />
+    
+    <ListView
+        android:id="@+id/posts_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/etMessage"
-        android:layout_alignParentRight="true"
+        android:layout_above="@id/separator"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:background="@color/offwhite" />
+    
+    <TextView
+        android:id="@+id/announce_text"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
         android:layout_alignParentTop="true"
-        android:enabled="true"
-        android:onClick="onSendButtonPressed"
-        android:text="@string/send" />
-
-    <ScrollView
-        android:id="@+id/scrollView1"
+        android:gravity="center"
+        android:background="@color/medium_grey"
+        android:visibility="gone"
+        style="@style/AnnounceText" />
+    
+    <TextView android:id="@+id/no_messages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/etMessage"
-        android:fillViewport="true" >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <TextView
-                android:id="@+id/tvPosts"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:text="@string/emptystring"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-        </LinearLayout>
-    </ScrollView>
+        android:layout_above="@id/separator"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="50dp"
+        style="@style/DisplayText"
+        android:text="@string/no_messages"
+        android:visibility="gone" />
 
 </RelativeLayout>
