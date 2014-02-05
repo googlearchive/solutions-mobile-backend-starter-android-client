@@ -38,7 +38,7 @@ public interface Consts {
     /**
      * Set default user authentication enabled or disabled.
      */
-    public static final boolean IS_AUTH_ENABLED = true;
+    public static final boolean IS_AUTH_ENABLED = false;
 
     /**
      * Auth audience for authentication on backend.
