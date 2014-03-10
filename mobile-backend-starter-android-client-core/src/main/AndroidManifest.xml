@@ -1,0 +1,36 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.google.cloud.backend">
+
+  <uses-sdk android:minSdkVersion="15" android:targetSdkVersion="16"/>
+
+  <permission android:name="com.google.cloud.backend.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
+
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="com.google.cloud.backend.permission.C2D_MESSAGE"/>
+  <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+  <uses-permission android:name="android.permission.WAKE_LOCK"/>
+  <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+  <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+
+    <application android:allowBackup="true"
+        android:label="@string/app_name"
+        android:icon="@drawable/ic_launcher"
+>
+
+      <service android:name="com.google.cloud.backend.GCMIntentService"/>
+
+      <receiver android:name="com.google.android.gcm.GCMBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND">
+        <intent-filter>
+          <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+          <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+          <category android:name="com.google.cloud.solutions.sampleapps.mobilebackend"/>
+        </intent-filter>
+      </receiver>
+
+      <service android:name="com.google.cloud.backend.GCMIntentService"/>
+
+    </application>
+
+
+
+</manifest>
