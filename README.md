@@ -26,7 +26,7 @@ For detailed setup instructions and documentation visit [Google App Engine devel
 
 1. Make sure you have Android SDK with Google APIs level 15 or above installed. This project is currently configured using APIs level 19, but will work perfectly with anything level 15 or above.
 
-2. Import the project into Android Studio.
+2. Import the project into Android Studio by the menu "File -> Open".
 
 3. Make sure you have Google APIs selected in your project properties. This option is under Android in Project Build Target.
 
