@@ -18,6 +18,11 @@ android {
     }
 }
 
+repositories {
+    maven { url 'https://github.com/hagikuratakeshi/maven-repository/raw/master/' }
+}
+
 dependencies {
-  compile project(':mobile-backend-starter-android-client-core')
+    compile 'com.google.cloud.backend.android.mobilebackend:endpoints-lib:0.0.1'
+    compile 'com.google.cloud.backend:mobile-backend-starter-android-client:0.0.1'
 }

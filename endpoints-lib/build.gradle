@@ -21,3 +21,18 @@ android {
 dependencies {
   compile 'com.google.api-client:google-api-client-android:1.17.0-rc'
 }
+
+apply plugin: 'maven'
+
+def deployTo = new File(rootDir, "repository")
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository url: "file://localhost" +  deployTo
+            pom.version = '0.0.1'
+            pom.groupId = 'com.google.cloud.backend.android.mobilebackend'
+            pom.artifactId = 'endpoints-lib'
+        }
+    }
+}
