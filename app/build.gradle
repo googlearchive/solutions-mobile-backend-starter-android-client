@@ -19,7 +19,7 @@ android {
 }
 
 repositories {
-    maven { url 'https://github.com/hagikuratakeshi/maven-repository/raw/master/' }
+    maven { url 'http://hagikuratakeshi.github.io/mobile-backend-starter-android-client-with-AndroidStudio/repository/' }
 }
 
 dependencies {
