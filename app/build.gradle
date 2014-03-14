@@ -19,10 +19,14 @@ android {
 }
 
 repositories {
-    maven { url 'http://hagikuratakeshi.github.io/mobile-backend-starter-android-client-with-AndroidStudio/repository/' }
+    maven {
+        url 'http://hagikuratakeshi.github.io/mobile-backend-starter-android-client-with-AndroidStudio/repository/'
+    }
 }
 
 dependencies {
-    compile 'com.google.cloud.backend.android.mobilebackend:endpoints-lib:0.0.1'
-    compile 'com.google.cloud.backend:mobile-backend-starter-android-client:0.0.1'
+    //    compile 'com.google.cloud.backend.android.mobilebackend:endpoints-lib:0.0.4'
+    //    compile 'com.google.cloud.backend:mobile-backend-starter-android-client:0.0.4'
+    compile project(':endpoints-lib')
+    compile project(':mobile-backend-starter-android-client-core')
 }
