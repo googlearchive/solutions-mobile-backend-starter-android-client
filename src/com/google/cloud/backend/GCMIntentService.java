@@ -15,6 +15,7 @@
 package com.google.cloud.backend;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.cloud.backend.core.Consts;
 
 import android.app.Application;
 import android.app.IntentService;
@@ -26,8 +27,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-
-import com.google.cloud.backend.core.Consts;
 
 import java.io.IOException;
 
