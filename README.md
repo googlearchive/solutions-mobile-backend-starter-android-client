@@ -24,7 +24,7 @@ Disclaimer: This is not an official Google Product.
 The instruction below lists just some key steps.
 For detailed setup instructions and documentation visit [Google App Engine developer site] (https://developers.google.com/cloud/samples/mbs).
 
-1. Make sure you have Android SDK with Google APIs level 15 or above installed. This project is currently configured using APIs level 19, but will work perfectly with anything level 15 or above.
+1. Make sure you have Android SDK with Google APIs level 15 or above installed.
 
 2. Import the project into Android Studio by the menu "File -> Open".
 
