@@ -14,6 +14,7 @@
 
 package com.google.cloud.backend.core;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -23,11 +24,19 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.cloud.backend.android.mobilebackend.Mobilebackend;
+import com.google.cloud.backend.android.mobilebackend.model.BlobAccess;
 import com.google.cloud.backend.android.mobilebackend.model.EntityDto;
 import com.google.cloud.backend.android.mobilebackend.model.EntityListDto;
 import com.google.cloud.backend.android.mobilebackend.model.QueryDto;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -100,7 +109,7 @@ public class CloudBackend {
      *
      * @param ce {@link com.google.cloud.backend.core.CloudEntity} for inserting a CloudEntity.
      * @return {@link com.google.cloud.backend.core.CloudEntity} that has updated fields (like updatedAt and
-     *         new Id).
+     * new Id).
      * @throws java.io.IOException When the call had failed for any reason.
      */
     public CloudEntity insert(CloudEntity ce) throws IOException {
@@ -118,7 +127,7 @@ public class CloudBackend {
      *
      * @param ce {@link com.google.cloud.backend.core.CloudEntity} for updating a CloudEntity.
      * @return {@link CloudEntity} that has updated fields (like updatedAt and
-     *         new Id).
+     * new Id).
      * @throws java.io.IOException When the call had failed for any reason.
      */
     public CloudEntity update(CloudEntity ce) throws IOException {
@@ -185,7 +194,7 @@ public class CloudBackend {
      * Reads the specified {@link CloudEntity} synchronously.
      *
      * @param kindName Name of the table for the CloudEntity to get.
-     * @param id Id of the CloudEntity to find.
+     * @param id       Id of the CloudEntity to find.
      * @return {@link CloudEntity}.
      * @throws java.io.IOException When the call had failed for any reason.
      */
@@ -201,7 +210,7 @@ public class CloudBackend {
      * {@link java.util.List} of Ids.
      *
      * @param kindName Name of the table for the CloudEntities to get.
-     * @param idList {@link java.util.List} of Ids of the CloudEntities to find.
+     * @param idList   {@link java.util.List} of Ids of the CloudEntities to find.
      * @return {@link java.util.List} of the found {@link CloudEntity}s.
      * @throws java.io.IOException When the call had failed for any reason.
      */
@@ -245,7 +254,7 @@ public class CloudBackend {
      * Deletes the specified {@link CloudEntity} synchronously.
      *
      * @param kindName Name of the table for the CloudEntity to delete.
-     * @param id Id of the CloudEntity to delete.
+     * @param id       Id of the CloudEntity to delete.
      * @throws java.io.IOException When the call had failed for any reason.
      */
     public void delete(String kindName, String id) throws IOException {
@@ -268,7 +277,7 @@ public class CloudBackend {
      * Deletes all the specified {@link CloudEntity}s synchronously.
      *
      * @param kindName Name of the table for the CloudEntity to delete.
-     * @param idList {@link java.util.List} that contains a list of Ids to delete.
+     * @param idList   {@link java.util.List} that contains a list of Ids to delete.
      * @throws java.io.IOException When the call had failed for any reason.
      */
     public void deleteAllById(String kindName, List<String> idList) throws IOException {
@@ -285,7 +294,7 @@ public class CloudBackend {
      * Deletes all the specified {@link CloudEntity}s synchronously.
      *
      * @param kindName Name of the table for the CloudEntity to delete.
-     * @param coList {@link java.util.List} that contains a list of Cloud to delete.
+     * @param coList   {@link java.util.List} that contains a list of Cloud to delete.
      * @throws java.io.IOException When the call had failed for any reason.
      */
     public void deleteAll(String kindName, List<CloudEntity> coList) throws IOException {
@@ -322,4 +331,116 @@ public class CloudBackend {
         return coList;
     }
 
+    /**
+     * Returns an download url for the blob specified by the param.
+     * @param param
+     * @return
+     * @throws IOException
+     */
+    public BlobAccess getBlobDownloadUrl(BlobAccessParam param) throws IOException {
+        return getMBSEndpoint().blobEndpoint().getDownloadUrl(param.bucketName, param.objectName).execute();
+    }
+
+    /**
+     * Returns an upload url for the blob specified by the param.
+     * @param param
+     * @return
+     * @throws IOException
+     */
+    public BlobAccess getBlobUploadUrl(BlobAccessParam param) throws IOException {
+        Mobilebackend.BlobEndpoint.GetUploadUrl uploadUrl = getMBSEndpoint().blobEndpoint().
+                getUploadUrl(param.bucketName, param.objectName, param.accessMode);
+        uploadUrl.setContentType(param.contentType);
+        return uploadUrl.execute();
+    }
+
+    private static final int BUFFER_SIZE_FOR_UPLOAD = 4096;
+
+    /**
+     * Uploads a blob to the backend.
+     * @param param
+     * @return <code>true</code> if the upload succeeds, <code>false</code> otherwise.
+     * @throws IOException
+     */
+    public Boolean uploadBlob(BlobUploadParam param) throws IOException {
+        HttpURLConnection conn = null;
+        boolean succeeded;
+        try {
+            URL url = new URL(param.shortLivedUrl);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("PUT");
+
+            if (param.blobAccessParam != null && param.blobAccessParam.contentType != null) {
+                conn.setRequestProperty("Content-type", param.blobAccessParam.contentType);
+            }
+            if (param.blobAccessParam != null && param.blobAccessParam.accessMode.equals("PUBLIC_READ")) {
+                conn.setRequestProperty("x-goog-acl", "public-read");
+            }
+            conn.connect();
+            BufferedOutputStream bos = new BufferedOutputStream(conn.getOutputStream());
+            InputStream bis = new BufferedInputStream(param.inputStream);
+            byte[] buffer = new byte[BUFFER_SIZE_FOR_UPLOAD];
+            int bytesRead;
+            while ((bytesRead = bis.read(buffer)) > 0) {
+                bos.write(buffer, 0, bytesRead);
+                bos.flush();
+            }
+            bos.close();
+
+            Log.i(Consts.TAG, "Uploaded message : " + conn.getResponseMessage());
+            Log.i(Consts.TAG, "Response code : " + conn.getResponseCode());
+            InputStream resultStream;
+            int responseCode = conn.getResponseCode();
+            succeeded = (responseCode >= 200) && (responseCode <= 202);
+            if (succeeded) {
+                resultStream = conn.getInputStream();
+                String resultMessage = getStringFromInputStream(resultStream);
+                Log.i(Consts.TAG, resultMessage);
+            } else {
+                resultStream = conn.getErrorStream();
+                String errorMessage = getStringFromInputStream(resultStream);
+                Log.e(Consts.TAG, errorMessage);
+            }
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+        return succeeded;
+    }
+
+    private static String getStringFromInputStream(InputStream inputStream) {
+        java.util.Scanner s = new java.util.Scanner(inputStream).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
+
+    /**
+     * Holder class for accessing a blob.
+     */
+    public static class BlobAccessParam {
+        public String bucketName;
+        public String objectName;
+        public String accessMode;
+        public String contentType;
+
+        @Override
+        public String toString() {
+            return "BlobAccessParam{" +
+                    "bucketName='" + bucketName + '\'' +
+                    ", objectName='" + objectName + '\'' +
+                    ", accessMode='" + accessMode + '\'' +
+                    ", contentType='" + contentType + '\'' +
+                    '}';
+        }
+    }
+
+    /**
+     * Holder class for uploading a blob.
+     */
+    public static class BlobUploadParam {
+        public BlobAccessParam blobAccessParam;
+        public InputStream inputStream;
+        public String shortLivedUrl;
+    }
 }

@@ -15,17 +15,29 @@
         android:enabled="true"
         android:src="@drawable/ic_send" />
 
+    <ImageView
+        android:id="@+id/picture_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="0dp"
+        android:layout_alignParentBottom="true"
+        android:enabled="true"
+        android:layout_toLeftOf="@+id/send_btn"
+        android:src="@drawable/ic_camera" />
+
     <EditText
         android:id="@+id/message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@id/send_btn"
         android:inputType="text"
-        android:maxLines="@integer/single_line" >
+        android:maxLines="@integer/single_line"
+        android:layout_toLeftOf="@+id/picture_btn">
+
         <requestFocus />
     </EditText>
+
 
     <View
         android:id="@+id/separator"
@@ -62,6 +74,15 @@
         android:layout_margin="50dp"
         style="@style/DisplayText"
         android:text="@string/no_messages"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progress_horizontal"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:indeterminateOnly="true"
+        android:layout_marginTop="-7dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:visibility="gone" />
 
 </RelativeLayout>

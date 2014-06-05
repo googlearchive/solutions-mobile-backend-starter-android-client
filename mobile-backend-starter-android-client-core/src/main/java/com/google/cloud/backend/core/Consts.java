@@ -23,7 +23,8 @@ public interface Consts {
     /**
      * Set Project ID of your Google APIs Console Project.
      */
-    public static final String PROJECT_ID = "*** ENTER YOUR PROJECT ID ***";
+//    public static final String PROJECT_ID = "*** ENTER YOUR PROJECT ID ***";
+    public static final String PROJECT_ID = "marine-resource-530";
 
     /**
      * Set Project Number of your Google APIs Console Project.
