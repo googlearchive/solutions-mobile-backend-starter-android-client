@@ -2,7 +2,7 @@
 
 This project is no longer actively developed or maintained.  
 
-For new work on this check out [relevant link](https://github.com/GoogleCloudPlatform/MobileShoppingAssistant-sample)
+For new work on this check out [Mobile Shopping Assistant](https://github.com/GoogleCloudPlatform/MobileShoppingAssistant-sample) or [Cloud Endpoints](https://cloud.google.com/endpoints/).
 
 solutions-mobile-backend-starter-android-client
 =====================================
